@@ -8,7 +8,7 @@ import numpy as np  # pylint: disable=import-error
 import pydeepspeech.wav_transcriber as wav_transcriber
 
 
-def transcribe(aggressive, audio, model):
+def transcribe(aggressive, audio, model, just_as_text=False):
     # Point to a path containing the pre-trained models & resolve ~ if used
     dir_name = os.path.expanduser(model)
 
@@ -46,7 +46,8 @@ def transcribe(aggressive, audio, model):
             sample_rate,
             audio_length,
         ) = wav_transcriber.vad_segment_generator(wave_file, aggressive)
-        f = open(wave_file.rstrip(".wav") + ".txt", "w")
+        output_file = wave_file.rstrip(".wav") + ".txt"
+        f = open(output_file, "w")
         logging.debug("Saving Transcript @: %s" % wave_file.rstrip(".wav") + ".txt")
 
         for i, segment in enumerate(segments):
@@ -61,6 +62,10 @@ def transcribe(aggressive, audio, model):
 
         # Summary of the files processed
         f.close()
+
+        if just_as_text:
+            with open(output_file) as f:
+                return f.read()
 
         # Extract filename from the full file path
         filename, ext = os.path.split(os.path.basename(wave_file))
