@@ -19,6 +19,7 @@ classifiers = [
 ]
 dependencies = [
     "capturing_process",
+    "deepspeech",
     "pathlib",
     "requests",
     "webrtcvad",
