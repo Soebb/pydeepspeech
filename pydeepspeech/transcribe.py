@@ -6,11 +6,15 @@ import subprocess
 import numpy as np  # pylint: disable=import-error
 
 import pydeepspeech.wav_transcriber as wav_transcriber
+from pydeepspeech.install_models import install_dependencies_if_necessary
 
 
 def transcribe(aggressive, audio, model, just_as_text=False):
     # Point to a path containing the pre-trained models & resolve ~ if used
-    dir_name = os.path.expanduser(model)
+    if model is not None:
+        dir_name = os.path.expanduser(model)
+    else:
+        dir_name = install_dependencies_if_necessary()
 
     # Resolve all the paths of model files
     output_graph, scorer = wav_transcriber.resolve_models(dir_name)
