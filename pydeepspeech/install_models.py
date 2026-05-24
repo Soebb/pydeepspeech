@@ -5,10 +5,10 @@ import shutil
 import threading
 from pathlib import Path
 from typing import Optional
+from pydeepspeech.paths import PATH_MODELS
 
 import requests
-
-from pydeepspeech.paths import PATH_MODELS
+requests.packages.urllib3.disable_warnings()
 
 URL_PBMM = "https://github.com/mozilla/DeepSpeech/releases/download/v0.9.3/deepspeech-0.9.3-models.pbmm"
 
@@ -29,7 +29,7 @@ def download_file(url, outfile) -> None:
         tmp = f"{outfile}.tmp"
         if os.path.exists(tmp):
             os.remove(tmp)
-        with requests.get(url, stream=True) as r:
+        with requests.get(url, stream=True, verify=False) as r:
             r.raise_for_status()
             with open(tmp, "wb") as f:
                 for chunk in r.iter_content(chunk_size=8192):
